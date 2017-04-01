@@ -1,10 +1,16 @@
 import urllib
 from urllib import request
+from smtp import *
+import datetime
 
+# Measured in seconds
+TIME_OUT_DELAY = 3600
 
 class Store:
     def __init__(self, url):
         self._url = url
+        self._hotmail = hotmail()
+        self._time_out = {}
 
     def get_html(self, url):
         req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
@@ -13,8 +19,20 @@ class Store:
 
     def check_items(self):
         for url in self.url():
-            if self.in_stock(url):
+            self.check_time_out(url)
+            if url not in self.time_out() and self.in_stock(url):
                 print("In stock at: "+url)
+                self.hotmail().send_email("In stock at: "+url)
+                self.set_time_out(url, TIME_OUT_DELAY)
+
+    def set_time_out(self, url, time_limit):
+        self.time_out()[url] = datetime.datetime.now() + datetime.timedelta(seconds=time_limit)
+
+    def check_time_out(self, url):
+        now = datetime.datetime.now()
+        if url in self.time_out():
+            if now > self.time_out()[url]:
+                del self.time_out()[url]
 
     # This function is just for show and should always be overloaded
     def in_stock(self, url):
@@ -22,6 +40,12 @@ class Store:
 
     def url(self):
         return self._url
+
+    def hotmail(self):
+        return self._hotmail
+
+    def time_out(self):
+        return self._time_out
 
 class Amazon(Store):
     def in_stock(self, url):

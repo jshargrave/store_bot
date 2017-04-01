@@ -1,3 +1,4 @@
+import time
 from search_store import *
 from smtp import *
 
@@ -20,24 +21,21 @@ toysrus_urls = ["http://www.toysrus.com/product/index.jsp?productId=119513636&cp
                 "http://www.toysrus.com/product/index.jsp?productId=119513666&cp=2255974.119659196&parentPage=family"]
 
 ama = Amazon(amazon_urls)
-ama.check_items()
-
 bes = BestBuy(bestybuy_urls)
-bes.check_items()
-
 gam = GameStop(gamestop_urls)
-gam.check_items()
-
 # target not working
 #tar = Target(target_urls)
-#tar.check_items()
-
 wal = Walmart(walmart_urls)
-wal.check_items()
-
 toy = ToysRUs(toysrus_urls)
-toy.check_items()
 
-hot = hotmail()
-hot.send_email("testing")
-print("Finished")
+# Measured in seconds
+SLEEP_DELAY = 300
+
+while True:
+    ama.check_items()
+    bes.check_items()
+    gam.check_items()
+    # tar.check_items()
+    wal.check_items()
+    toy.check_items()
+    time.sleep(SLEEP_DELAY)
