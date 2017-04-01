@@ -2,6 +2,8 @@ import time
 from search_store import *
 from smtp import *
 
+print("Starting Program")
+
 amazon_urls = ["https://www.amazon.com/Nintendo-Switch/dp/B01LTHP2ZK/ref=sr_tnr_p_1_videogames_1?s=videogames&ie=UTF8&qid=1484346353&sr=1-1&keywords=nintendo+switch",
                "https://www.amazon.com/Nintendo-Switch/dp/B01MUAGZ49/ref=sr_tnr_p_1_videogames_1?s=videogames&ie=UTF8&qid=1484346353&sr=1-1&keywords=nintendo%2Bswitch&th=1"]
 
@@ -39,3 +41,5 @@ while True:
     wal.check_items()
     toy.check_items()
     time.sleep(SLEEP_DELAY)
+	
+print("Program Finished")
