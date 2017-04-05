@@ -5,9 +5,11 @@ class hotmail:
         self.smtpObj = smtplib.SMTP('smtp-mail.outlook.com', 587)
         self.smtpObj.ehlo()
         self.smtpObj.starttls()
+
+        # email account credentials
         self.smtpObj.login('store_bot@outlook.com', '123JolleyPeople')
 
     def send_email(self, msg):
-        # my number
+        # insert from and to email address
         self.smtpObj.sendmail('store_bot@outlook.com', '6602816177@txt.att.net', msg)
 

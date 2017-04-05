@@ -3,7 +3,7 @@ from urllib import request
 from smtp import *
 import datetime
 
-# Measured in seconds
+# How long to timeout a url when it is found in stock, measured in sec
 TIME_OUT_DELAY = 3600
 
 class Store:
@@ -72,6 +72,7 @@ class GameStop(Store):
             return True
         return False
 
+# --------------------------DOES NOT WORK!--------------------------------------
 class Target(Store):
     def in_stock(self, url):
         str = self.get_html(url)
