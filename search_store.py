@@ -17,13 +17,12 @@ class Store:
         con = urllib.request.urlopen(req)
         return con.read().decode('utf-8')
 
-    def check_items(self):
-        for url in self.url():
-            self.check_time_out(url)
-            if url not in self.time_out() and self.in_stock(url):
-                print("In stock at: "+url)
-                self.hotmail().send_email("In stock at: "+url)
-                self.set_time_out(url, TIME_OUT_DELAY)
+    def check_item(self):
+        self.check_time_out(self.url())
+        if self.url() not in self.time_out() and self.in_stock(self.url()):
+            print("In stock at: "+self.url())
+            self.hotmail().send_email("In stock at: "+self.url())
+            self.set_time_out(self.url(), TIME_OUT_DELAY)
 
     def set_time_out(self, url, time_limit):
         self.time_out()[url] = datetime.datetime.now() + datetime.timedelta(seconds=time_limit)

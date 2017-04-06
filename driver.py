@@ -1,33 +1,8 @@
-import time
+import sys # exceptions
+import time # adding and comparing times
 from search_store import *
 
-# -----------------------------------------URLS----------------------------------------
-amazon_urls = ["https://www.amazon.com/Nintendo-Switch/dp/B01LTHP2ZK/ref=sr_tnr_p_1_videogames_1?s=videogames&ie=UTF8&qid=1484346353&sr=1-1&keywords=nintendo+switch",
-               "https://www.amazon.com/Nintendo-Switch/dp/B01MUAGZ49/ref=sr_tnr_p_1_videogames_1?s=videogames&ie=UTF8&qid=1484346353&sr=1-1&keywords=nintendo%2Bswitch&th=1"]
-
-bestybuy_urls = ["http://www.bestbuy.com/site/nintendo-switch-32gb-console-gray-joy-con/5670003.p?skuId=5670003",
-                 "http://www.bestbuy.com/site/nintendo-switch-32gb-console-neon-red-neon-blue-joy-con/5670100.p?skuId=5670100",
-                 "http://www.bestbuy.com/site/nintendo-entertainment-system-nes-classic-edition/5389100.p?skuId=5389100"]
-
-gamestop_urls = ["http://www.gamestop.com/nintendo-switch/consoles/nintendo-switch-console-with-gray-joy-con/141820",
-                 "http://www.gamestop.com/nintendo-switch/consoles/nintendo-switch-console-with-neon-blue-and-neon-red-joy-con/141887",
-                 "http://www.gamestop.com/nes/consoles/nintendo-nes-classic-edition-with-miniboss-wireless-controller-ships-by-4-7-17/138653"]
-
-target_urls = ["http://www.target.com/p/nintendo-switch-with-gray-joy-con/-/A-52052007",
-               "http://www.target.com/p/-/A-52189185",
-               "http://www.target.com/p/the-legend-of-zelda-153-breath-of-the-wild-153-nintendo-switch/-/A-52161264"]
-
-walmart_urls = ["https://www.walmart.com/co/47217353"]
-
-toysrus_urls = ["http://www.toysrus.com/product/index.jsp?productId=119513636&cp=2255974.119659196&parentPage=family",
-                "http://www.toysrus.com/product/index.jsp?productId=119513666&cp=2255974.119659196&parentPage=family"]
-
-ama = Amazon(amazon_urls)
-bes = BestBuy(bestybuy_urls)
-gam = GameStop(gamestop_urls)
-tar = Target(target_urls)
-wal = Walmart(walmart_urls)
-toy = ToysRUs(toysrus_urls)
+URL_FILE = "urls.txt"
 
 # Measured in seconds
 # How long to delay the next loop iteration, measured in sec
@@ -35,12 +10,43 @@ SLEEP_DELAY = 300
 
 print("Starting Program")
 
-# Main while loop that checks all items
-while True:
-    ama.check_items()
-    bes.check_items()
-    gam.check_items()
-    # tar.check_items()
-    wal.check_items()
-    toy.check_items()
-    time.sleep(SLEEP_DELAY)
+# Def: Main function used to setup and run program
+def main():
+    store_list = build_stores(URL_FILE)
+
+    print("checking items")
+    while True:
+        for store in store_list:
+            store.check_item()
+        time.sleep(SLEEP_DELAY)
+
+
+# Des: Takes a file path as a parameter, and builds a list of store objects from the urls in the file.
+# Pre: None.
+# Post: List of store objects returned.
+def build_stores(file):
+    store_list = []
+    f = open(file, 'r')
+
+    # looping through all lines in file and building the correct objects
+    for line in f.readlines():
+        if line is not '\n' and line[0] is not '#':
+            line = line.rstrip()
+            if "amazon" in line:
+                store_list.append(Amazon(line))
+            elif "bestbuy" in line:
+                store_list.append(BestBuy(line))
+            elif "gamestop" in line:
+                store_list.append(GameStop(line))
+            elif "walmart" in line:
+                store_list.append(Walmart(line))
+            elif "toysrus" in line:
+                store_list.append(ToysRUs(line))
+            else:
+                print("Error: did not recognize line - " + line)
+    return store_list
+
+if __name__ == "__main__":
+    main()
+
+
