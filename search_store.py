@@ -10,7 +10,6 @@ TIME_OUT_DELAY = 8640
 class Store:
     def __init__(self, url):
         self._url = url
-        self._msg = self.get_msg()
         self._hotmail = hotmail()
         self._time_out = {}
 
@@ -19,10 +18,10 @@ class Store:
         if self.url() not in self.time_out() and self.in_stock():
             print(self.get_msg())
             self.hotmail().send_email(self.get_msg())
-            self.set_time_out(TIME_OUT_DELAY)
+            self.set_time_out()
 
-    def set_time_out(self, time_limit):
-        self.time_out()[self.url()] = datetime.datetime.now() + datetime.timedelta(seconds=time_limit)
+    def set_time_out(self):
+        self.time_out()[self.url()] = datetime.datetime.now() + datetime.timedelta(seconds=TIME_OUT_DELAY)
 
     def check_time_out(self):
         now = datetime.datetime.now()
@@ -47,6 +46,9 @@ class Store:
 
     def url(self):
         return self._url
+
+    def msg(self):
+        return self._msg
 
     def hotmail(self):
         return self._hotmail
@@ -91,14 +93,14 @@ class GameStop(Store):
 class Target(Store):
     def in_stock(self):
         con = self.get_html()
-        j = json.load(con)
+        j = json.loads(self.html_to_string(con))
         if (j["product"]["available_to_promise_network"]["availability"]) == "AVAILABLE":
             return True
         return False
 
     def get_msg(self):
-        conn = self.get_html()
-        j = json.load(conn)
+        con = self.get_html()
+        j = json.loads(self.html_to_string(con))
         return "Target: " + j["product"]["item"]["buy_url"]
 
 class Walmart(Store):
