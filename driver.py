@@ -14,7 +14,7 @@ print("Starting Program")
 def main():
     store_list = build_stores(URL_FILE)
 
-    print("checking items")
+    print("Checking items")
     while True:
         for store in store_list:
             store.check_item()
@@ -38,10 +38,14 @@ def build_stores(file):
                 store_list.append(BestBuy(line))
             elif "gamestop" in line:
                 store_list.append(GameStop(line))
+            elif "target" in line:
+                store_list.append(Target(line))
             elif "walmart" in line:
                 store_list.append(Walmart(line))
             elif "toysrus" in line:
                 store_list.append(ToysRUs(line))
+            elif "newegg" in line:
+                store_list.append(Newegg(line))
             else:
                 print("Error: did not recognize line - " + line)
     return store_list
