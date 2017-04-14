@@ -11,5 +11,5 @@ class hotmail:
 
     def send_email(self, msg):
         # insert from and to email address
-        self.smtpObj.sendmail('store_bot@outlook.com', '6602816177@txt.att.net', msg)
+        self.smtpObj.sendmail('store_bot@outlook.com', 'happyguyhere@hotmail.com', msg)
 

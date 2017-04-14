@@ -10,14 +10,14 @@ TIME_OUT_DELAY = 8640
 class Store:
     def __init__(self, url):
         self._url = url
-        self._hotmail = hotmail()
+        self._email = hotmail()
         self._time_out = {}
 
     def check_item(self):
         self.check_time_out()
         if self.url() not in self.time_out() and self.in_stock():
             print(self.get_msg())
-            self.hotmail().send_email(self.get_msg())
+            self.email().send_email(self.get_msg())
             self.set_time_out()
 
     def set_time_out(self):
@@ -34,24 +34,24 @@ class Store:
         print("Error: did not run in_stock function from subclass")
 
     def get_html(self):
-        req = urllib.request.Request(self.url(), headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        return con
+        try:
+            req = urllib.request.Request(self.url(), headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            return con
+        except urllib.request.URLError as e:
+            print(e)
 
     def html_to_string(self, con):
         return con.read().decode('utf-8')
 
     def get_msg(self):
-        return "In Stock: " + self.url()
+        return "\nIn Stock: " + self.url()
 
     def url(self):
         return self._url
 
-    def msg(self):
-        return self._msg
-
-    def hotmail(self):
-        return self._hotmail
+    def email(self):
+        return self._email
 
     def time_out(self):
         return self._time_out
@@ -64,7 +64,7 @@ class Amazon(Store):
         return False
 
     def get_msg(self):
-        return "Amazon: " + self.url()
+        return "\nAmazon: " + self.url()
 
 class BestBuy(Store):
     def get_html(self):
@@ -78,7 +78,7 @@ class BestBuy(Store):
         return False
 
     def get_msg(self):
-        return "BestBuy: " + self.url()
+        return "\nBestBuy: " + self.url()
 
 class GameStop(Store):
     def in_stock(self):
@@ -88,7 +88,7 @@ class GameStop(Store):
         return False
 
     def get_msg(self):
-        return "GameStop: " + self.url()
+        return "\nGameStop: " + self.url()
 
 class Target(Store):
     def in_stock(self):
@@ -101,7 +101,7 @@ class Target(Store):
     def get_msg(self):
         con = self.get_html()
         j = json.loads(self.html_to_string(con))
-        return "Target: " + j["product"]["item"]["buy_url"]
+        return "\nTarget: " + j["product"]["item"]["buy_url"]
 
 class Walmart(Store):
     def in_stock(self):
@@ -111,7 +111,7 @@ class Walmart(Store):
         return False
 
     def get_msg(self):
-        return "Walmart: " + self.url()
+        return "\nWalmart: " + self.url()
 
 class ToysRUs(Store):
     def in_stock(self):
@@ -121,7 +121,7 @@ class ToysRUs(Store):
         return False
 
     def get_msg(self):
-        return "ToysRUS: " + self.url()
+        return "\nToysRUS: " + self.url()
 
 class Newegg(Store):
     def in_stock(self):
@@ -131,4 +131,4 @@ class Newegg(Store):
         return False
 
     def get_msg(self):
-        return "NewEgg: " + self.url()
+        return "\nNewEgg: " + self.url()
