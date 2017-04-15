@@ -1,11 +1,14 @@
 from urllib import request
+from urllib import error
 from smtp import *
 import urllib
 import json
 import datetime
+import time
 
 # How long to timeout a url when it is found in stock, measured in sec
-TIME_OUT_DELAY = 8640
+TIME_OUT_DELAY = 86400
+
 
 class Store:
     def __init__(self, url):
@@ -15,13 +18,22 @@ class Store:
 
     def check_item(self):
         self.check_time_out()
-        if self.url() not in self.time_out() and self.in_stock():
-            print(self.get_msg())
-            self.email().send_email(self.get_msg())
-            self.set_time_out()
+        try:
+            if self.url() not in self.time_out() and self.in_stock():
+                        print(self.get_msg())
+                        self.email().send_email(self.get_msg())
+                        self.set_time_out(self.now_date_plus_sec(TIME_OUT_DELAY))
+        except urllib.error.HTTPError as e:
+            print(e)
+            print("Error Retrieving " + self.url())
+        except urllib.error.URLError as e:
+            print(e)
 
-    def set_time_out(self):
-        self.time_out()[self.url()] = datetime.datetime.now() + datetime.timedelta(seconds=TIME_OUT_DELAY)
+    def set_time_out(self, date):
+        self.time_out()[self.url()] = date
+
+    def now_date_plus_sec(self, sec):
+        return datetime.datetime.now() + datetime.timedelta(seconds=sec)
 
     def check_time_out(self):
         now = datetime.datetime.now()
@@ -34,12 +46,9 @@ class Store:
         print("Error: did not run in_stock function from subclass")
 
     def get_html(self):
-        try:
-            req = urllib.request.Request(self.url(), headers={'User-Agent': "Magic Browser"})
-            con = urllib.request.urlopen(req)
-            return con
-        except urllib.request.URLError as e:
-            print(e)
+        req = urllib.request.Request(self.url(), headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        return con
 
     def html_to_string(self, con):
         return con.read().decode('utf-8')

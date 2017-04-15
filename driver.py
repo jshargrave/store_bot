@@ -1,5 +1,3 @@
-import sys # exceptions
-import time # adding and comparing times
 from search_store import *
 
 URL_FILE = "urls.txt"
@@ -8,12 +6,14 @@ URL_FILE = "urls.txt"
 # How long to delay the next loop iteration, measured in sec
 SLEEP_DELAY = 300
 
-print("Starting Program")
 
 # Def: Main function used to setup and run program
 def main():
+    print("Starting Program")
+    # Returns a list of Store object with urls from URL_FILE
     store_list = build_stores(URL_FILE)
 
+    # Main loop the checks items status
     print("Checking items")
     while True:
         for store in store_list:

@@ -11,7 +11,6 @@ http://www.bestbuy.com/site/nintendo-entertainment-system-nes-classic-edition/53
 #GameStop
 http://www.gamestop.com/nintendo-switch/consoles/nintendo-switch-console-with-gray-joy-con/141820
 http://www.gamestop.com/nintendo-switch/consoles/nintendo-switch-console-with-neon-blue-and-neon-red-joy-con/141887
-http://www.gamestop.com/nintendo-switch/consoles/nintendo-switch-console-with-neon-joy-con-family-friendly-bundle-ships-by-4-12-17/143269
 http://www.gamestop.com/nes/consoles/nintendo-nes-classic-edition-with-miniboss-wireless-controller-ships-by-4-7-17/138653
 
 #Target - Placing normal urls here will not work for Target
@@ -24,5 +23,3 @@ https://www.walmart.com/co/47217353
 #ToysRUS
 http://www.toysrus.com/product/index.jsp?productId=119513636&cp=2255974.119659196&parentPage=family
 http://www.toysrus.com/product/index.jsp?productId=119513666&cp=2255974.119659196&parentPage=family
-
-#NewEgg
