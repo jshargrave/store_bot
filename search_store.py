@@ -43,15 +43,14 @@ class Store:
 
     # This function is just for show and should always be overloaded
     def in_stock(self):
-        print("Error: did not run in_stock function from subclass")
+        raise Exception("Error: did not run in_stock function from subclass")
 
     def get_html(self):
         req = urllib.request.Request(self.url(), headers={'User-Agent': "Magic Browser"})
         con = urllib.request.urlopen(req)
-        return con
-
-    def html_to_string(self, con):
-        return con.read().decode('utf-8')
+        html = con.read().decode('utf-8')
+        con.close()
+        return html
 
     def get_msg(self):
         return "\nIn Stock: " + self.url()
@@ -65,15 +64,17 @@ class Store:
     def time_out(self):
         return self._time_out
 
+
 class Amazon(Store):
     def in_stock(self):
-        con = self.get_html()
-        if "Add to Cart" in self.html_to_string(con):
+        html = self.get_html()
+        if "Add to Cart" in html:
             return True
         return False
 
     def get_msg(self):
         return "\nAmazon: " + self.url()
+
 
 class BestBuy(Store):
     def get_html(self):
@@ -81,61 +82,66 @@ class BestBuy(Store):
         return con
 
     def in_stock(self):
-        con = self.get_html()
-        if "Add to Cart" in self.html_to_string(con):
+        html = self.get_html()
+        if "Add to Cart" in html:
             return True
         return False
 
     def get_msg(self):
         return "\nBestBuy: " + self.url()
 
+
 class GameStop(Store):
     def in_stock(self):
-        con = self.get_html()
-        if "AddToCartClicked(this);" in self.html_to_string(con):
+        html = self.get_html()
+        if "AddToCartClicked(this);" in html:
             return True
         return False
 
     def get_msg(self):
         return "\nGameStop: " + self.url()
 
+
 class Target(Store):
     def in_stock(self):
-        con = self.get_html()
-        j = json.loads(self.html_to_string(con))
+        html = self.get_html()
+        j = json.loads(html)
         if (j["product"]["available_to_promise_network"]["availability"]) == "AVAILABLE":
             return True
         return False
 
     def get_msg(self):
-        con = self.get_html()
-        j = json.loads(self.html_to_string(con))
+        html = self.get_html()
+        j = json.loads(html)
         return "\nTarget: " + j["product"]["item"]["buy_url"]
+
 
 class Walmart(Store):
     def in_stock(self):
-        con = self.get_html()
-        if "Add to Cart" in self.html_to_string(con):
+        html = self.get_html()
+        if "Add to Cart" in html:
             return True
         return False
 
     def get_msg(self):
         return "\nWalmart: " + self.url()
 
+
 class ToysRUs(Store):
     def in_stock(self):
-        con = self.get_html()
-        if "class=\"truAddToCart  \"" in self.html_to_string(con):
+        html = self.get_html()
+        if "class=\"truAddToCart  \"" in html:
             return True
         return False
 
     def get_msg(self):
         return "\nToysRUS: " + self.url()
 
+
 class Newegg(Store):
     def in_stock(self):
-        con = self.get_html()
-        if "product_instock:['1']," in self.html_to_string(con):
+        html = self.get_html()
+        if "product_instock:['1']," in html:
             return True
         return False
 
